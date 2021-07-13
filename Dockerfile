@@ -71,6 +71,7 @@ WORKDIR /opt/spark_clone
 RUN git checkout "tags/v${SPARK_VERSION}" -b "v${SPARK_VERSION}"
 #RUN ./dev/make-distribution.sh --name spark-patched --pip -Pkubernetes -Phive -Phive-thriftserver -Phadoop-provided -Dhadoop.version="${HADOOP_VERSION}"
 RUN ./dev/make-distribution.sh --name spark-patched --pip -Phive -Phive-thriftserver -Phadoop-provided -Dhadoop.version="${HADOOP_VERSION}"
+
 COPY conf/* ./dist/conf
 RUN find /opt/catalog -name "*.jar" | grep -Ev "test|original" | xargs -I{} cp {} ./dist/jars
 ENV DIRNAME=spark-${SPARK_VERSION}-bin-hadoop-provided-glue
