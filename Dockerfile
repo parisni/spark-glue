@@ -89,4 +89,3 @@ ARG DIRNAME=spark-${SPARK_VERSION}-bin-hadoop-provided-glue
 #cd /
 RUN echo "Creating archive $DIRNAME.tgz"
 RUN tar -cvzf "$DIRNAME.tgz" dist
-#RUN ./bin/spark-shell
