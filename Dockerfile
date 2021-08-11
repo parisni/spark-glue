@@ -70,9 +70,9 @@ WORKDIR /opt/spark_clone
 
 RUN git checkout "tags/v${SPARK_VERSION}" -b "v${SPARK_VERSION}"
 #RUN ./dev/make-distribution.sh --name spark-patched --pip -Pkubernetes -Phive -Phive-thriftserver -Phadoop-provided -Dhadoop.version="${HADOOP_VERSION}"
-RUN ./dev/make-distribution.sh --name spark-patched --pip -Phive -Phive-thriftserver -Phadoop-provided -Dhadoop.version="${HADOOP_VERSION}"
+RUN ./dev/make-distribution.sh --name spark-patched --pip -Pyarn -Phadoop-cloud  -Phive -Phive-thriftserver -Phadoop-provided -Dhadoop.version="${HADOOP_VERSION}"
 
-COPY conf/* ./dist/conf
+COPY conf/* ./dist/conf/
 RUN find /opt/catalog -name "*.jar" | grep -Ev "test|original" | xargs -I{} cp {} ./dist/jars
 ENV DIRNAME=spark-${SPARK_VERSION}-bin-hadoop-provided-glue
 #BUILD SPARK
@@ -82,6 +82,9 @@ RUN echo "Uploading to DIRNAME $DIRNAME"
 RUN echo $SPARK_DIST_CLASSPATH
 
 WORKDIR /opt/spark_clone
+# hadoop-cloud generated jar looks broken, replace with this one
+RUN curl -L https://repo.hortonworks.com/content/repositories/releases/org/apache/spark/spark-hadoop-cloud_2.12/3.0.1.3.0.7110.0-81/spark-hadoop-cloud_2.12-3.0.1.3.0.7110.0-81.jar --output /opt/spark_clone/dist/jars/spark-hadoop-cloud.jar
+
 
 ARG DIRNAME=spark-${SPARK_VERSION}-bin-hadoop-provided-glue
 #RUN echo "Uploading to DIRNAME $DIRNAME"
